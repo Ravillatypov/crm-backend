@@ -33,6 +33,6 @@ class User(TimestampModel):
 
 
 class Session(TimestampModel):
+    refresh_token = fields.UUIDField(pk=True)
     user = fields.ForeignKeyField('auth.User', 'sessions')
-    refresh_token = fields.UUIDField()
     expired_at = fields.DatetimeField()

@@ -16,6 +16,8 @@ SENTRY_DSN = env.str('SENTRY_DSN', default='')
 if SENTRY_DSN:
     sentry_sdk.init(SENTRY_DSN)
 
+JWT_ALGORITHM = 'HS256'
+
 formatter = logging.Formatter('{"time": "%(asctime)s", "level": "%(levelname)s", "file": "%(filename)s", '
                               '"function": "%(funcName)s", "message": "%(message)s"}')
 stream = logging.StreamHandler()

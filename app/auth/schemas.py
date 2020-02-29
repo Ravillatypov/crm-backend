@@ -1,5 +1,6 @@
-from pydantic import Field, BaseModel,fields
 from typing import List
+
+from pydantic import Field, BaseModel, UUID4
 
 
 class LoginSchema(BaseModel):
@@ -28,3 +29,7 @@ class TokenSchema(BaseModel):
 class JWTSchema(BaseModel):
     user_id: int
     permissions: List[str]
+
+
+class RefreshSchema(BaseModel):
+    refresh_token: UUID4
