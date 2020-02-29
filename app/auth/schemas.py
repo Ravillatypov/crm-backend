@@ -10,14 +10,14 @@ class LoginSchema(BaseModel):
 class UserSchema(BaseModel):
     id: int
     permissions: List[str]
-    first_name: str = Field(min_length=2, max_length=50)
-    last_name: str = Field(min_length=2, max_length=50)
-    login: str = Field(min_length=10, max_length=20)
+    first_name: str = Field('', min_length=2, max_length=50)
+    last_name: str = Field('', min_length=2, max_length=50)
+    login: str = Field('', min_length=10, max_length=20)
     is_active: bool
 
 
 class UserPostSchema(UserSchema):
-    password: str = Field(min_length=6, max_length=50)
+    password: str = Field('', min_length=6, max_length=50)
 
 
 class TokenSchema(BaseModel):

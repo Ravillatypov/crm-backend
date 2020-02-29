@@ -7,14 +7,22 @@ from starlette.status import HTTP_401_UNAUTHORIZED
 
 from app.auth.models import User, Session
 from app.auth.schemas import TokenSchema, LoginSchema
+from app.contrib.schemas import MessageSchema
 from app.settings import SECRET_KEY
 
 v1 = APIRouter()
 
 
-@v1.post('/login', response_model=TokenSchema, name='', status_code=201, tags=['auth'])
+@v1.post(
+    '/login',
+    response_model=TokenSchema,
+    name='Login',
+    status_code=200,
+    tags=['auth'],
+    responses={'401': {'model': MessageSchema}}
+)
 async def login(data: LoginSchema = Body(...,)):
-    user = await User.get_or_none(login=data.login.strip().lower())
+    user = await User.get_or_none(login=data.login.strip().lower(), is_active=True)
     if user and user.verify(data.password):
         session = await Session.create(
             user=user,
@@ -23,12 +31,12 @@ async def login(data: LoginSchema = Body(...,)):
         )
         access_token = jwt.encode(
             {
-            'sub': {
-                'user_id': user.id,
-                'permissions': user.permissions
+                'sub': {
+                    'user_id': user.id,
+                    'permissions': user.permissions
+                },
+                'exp': datetime.utcnow() + timedelta(hours=1)
             },
-            'exp': datetime.utcnow() + timedelta(hours=1)
-        },
             SECRET_KEY
         )
         return {'access_token': access_token, 'refresh_token': f'{session.refresh_token}'}
