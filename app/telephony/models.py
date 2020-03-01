@@ -30,7 +30,7 @@ class Call(TimestampModel):
     voice_finished_at = fields.DatetimeField(null=True)
     finished_at = fields.DatetimeField(null=True)
     is_record = fields.BooleanField(default=False)
-    record_url = fields.CharField(max_length=255, null=True)
+    record_url = fields.CharField(max_length=255, default='')
     uploaded_at = fields.DatetimeField(null=True)
 
     class Meta:
