@@ -4,7 +4,7 @@ from pydantic import Field, BaseModel, UUID4
 
 
 class LoginSchema(BaseModel):
-    login: str
+    username: str
     password: str
 
 

@@ -1,6 +1,7 @@
 from datetime import datetime
 
-from fastapi import APIRouter, Body, HTTPException
+from fastapi import APIRouter, Body, HTTPException, Depends
+from fastapi.security import OAuth2PasswordRequestForm
 from starlette.status import HTTP_401_UNAUTHORIZED
 
 from app.auth.models import User, Session
@@ -20,7 +21,7 @@ v1 = APIRouter()
     responses={'401': {'model': MessageSchema}}
 )
 async def login(data: LoginSchema = Body(...,)):
-    user = await User.get_or_none(login=data.login.strip().lower(), is_active=True)
+    user = await User.get_or_none(login=data.username.strip().lower(), is_active=True)
     if user and user.verify(data.password):
         return await get_jwt_token(user)
     raise HTTPException(
@@ -28,6 +29,19 @@ async def login(data: LoginSchema = Body(...,)):
             detail="Incorrect login or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
+
+
+@v1.post(
+    '/token',
+    response_model=TokenSchema,
+    name='Login',
+    status_code=200,
+    tags=['auth'],
+    responses={'401': {'model': MessageSchema}}
+)
+async def token(data: OAuth2PasswordRequestForm = Depends()):
+    data = LoginSchema(username=data.username, password=data.password)
+    return await login(data)
 
 
 @v1.post(
