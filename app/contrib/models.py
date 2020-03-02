@@ -1,4 +1,5 @@
 from tortoise import models, fields
+from tortoise.query_utils import Q
 
 
 class TimestampModel(models.Model):
@@ -7,3 +8,7 @@ class TimestampModel(models.Model):
 
     class Meta:
         abstract = True
+
+
+def get_filter(**kwargs) -> Q:
+    return Q(**{k: v for k, v in kwargs.items() if v})

@@ -17,6 +17,7 @@ async def startup():
         db_url=DB_DSN,
         modules={
             'auth': ['app.auth.models'],
+            'telephony': ['app.telephony.models'],
         }
     )
     await Tortoise.generate_schemas()
